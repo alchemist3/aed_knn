@@ -1,0 +1,43 @@
+from model import Knn
+import time
+
+# Quantity of generated points
+n = 1000
+# Accuracy measurements for given k
+attempts = 50
+
+# Accuracy of all data sets
+accuracy_data = []
+labels = ['podział liniowy', 'szachownica 2x2', 'szachownica 3x3', 'szachownica 4x4', 'szachownica 5x5']
+
+lin_data = Knn()
+lin_data.points_gen_lin(n, 0.07)
+lin_data.plot_data_set()
+lin_data.knn_accuracy_list(10, attempts=attempts)
+accuracy_data.append(lin_data.accuracy_list)
+
+squares_4 = Knn()
+squares_4.points_gen_chessboard(n, 2, 0.02)
+squares_4.plot_data_set()
+squares_4.knn_accuracy_list(10, attempts=attempts)
+accuracy_data.append(squares_4.accuracy_list)
+
+squares_9 = Knn()
+squares_9.points_gen_chessboard(n, 3, 0.02)
+squares_9.plot_data_set()
+squares_9.knn_accuracy_list(10, attempts=attempts)
+accuracy_data.append(squares_9.accuracy_list)
+
+squares_16 = Knn()
+squares_16.points_gen_chessboard(n, 4, 0.02)
+squares_16.plot_data_set()
+squares_16.knn_accuracy_list(10, attempts=attempts)
+accuracy_data.append(squares_16.accuracy_list)
+
+squares_25 = Knn()
+squares_25.points_gen_chessboard(n, 5, 0.02)
+squares_25.plot_data_set()
+squares_25.knn_accuracy_list(10, attempts=attempts)
+accuracy_data.append(squares_25.accuracy_list)
+
+Knn.plot_knn_accuracy(accuracy_data, labels, 5)
