@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
-import pprint
-import time
+from matplotlib.colors import ListedColormap
 from itertools import product
 
 
@@ -79,4 +78,39 @@ class Knn:
             plt.plot(np.array(accuracy_lists[i])[:, 0], np.array(accuracy_lists[i])[:, 1], label=labels[i])
         plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
                    ncol=3, fancybox=True, shadow=True)
+        plt.show()
+
+    @staticmethod
+    def plot_decision_boundaries(X, y, n_neighbors):
+
+        h = .002  # step size in the mesh
+
+        # Create color maps
+        cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA'])
+        cmap_bold = ListedColormap(['#FF0000', '#00FF00'])
+
+        # we create an instance of Neighbours Classifier and fit the data.
+        neigh = KNeighborsClassifier(n_neighbors=n_neighbors)
+        neigh.fit(X, y)
+
+        # Plot the decision boundary. For that, we will assign a color to each
+        # point in the mesh [x_min, x_max]x[y_min, y_max].
+        x_min, x_max = X[:, 0].min() - 0.05, X[:, 0].max() + 0.05
+        y_min, y_max = X[:, 1].min() - 0.05, X[:, 1].max() + 0.05
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                             np.arange(y_min, y_max, h))
+        Z = neigh.predict(np.c_[xx.ravel(), yy.ravel()])
+
+        # Put the result into a color plot
+        Z = Z.reshape(xx.shape)
+        plt.figure()
+        plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
+
+        # Plot also the training points
+        plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold,
+                    edgecolor='k', s=20)
+        plt.xlim(xx.min(), xx.max())
+        plt.ylim(yy.min(), yy.max())
+        plt.title("Granice decyzyjne i zestaw danych (k = %i)" % n_neighbors)
+
         plt.show()
