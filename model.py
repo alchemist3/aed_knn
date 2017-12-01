@@ -78,6 +78,8 @@ class Knn:
             plt.plot(np.array(accuracy_lists[i])[:, 0], np.array(accuracy_lists[i])[:, 1], label=labels[i])
         plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
                    ncol=3, fancybox=True, shadow=True)
+        plt.xlabel("współczynnik k")
+        plt.ylabel("dokładność")
         plt.show()
 
     @staticmethod
@@ -112,5 +114,6 @@ class Knn:
         plt.xlim(xx.min(), xx.max())
         plt.ylim(yy.min(), yy.max())
         plt.title("Granice decyzyjne i zestaw danych (k = %i)" % n_neighbors)
-
+        plt.xlabel("x1")
+        plt.ylabel("x2")
         plt.show()
