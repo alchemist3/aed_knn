@@ -13,8 +13,6 @@ class Knn:
         self.yu = []
         self.xt = []
         self.yt = []
-        self.accuracy = 0
-        self.accuracy_list = []
 
     def points_gen_lin(self, points_num, disorder_coeff):
         self.x = np.random.rand(points_num, 2)
@@ -45,21 +43,22 @@ class Knn:
         self.xt = [self.x[i] for i in idx[int(np.floor(len(self.x) * alfa) + 1):len(self.x)]]
         self.yt = [self.y[i] for i in idx[int(np.floor(len(self.x) * alfa) + 1):len(self.x)]]
 
-    def knn_accuracy(self, k, attempts=20, split_ratio=0.5):
-        self.accuracy = 0
+    def knn_accuracy(self, k, attempts=5, split_ratio=0.5):
+        accuracy = 0
         for i in range(attempts):
             self.split_data(split_ratio)
             neigh = KNeighborsClassifier(n_neighbors=k)
             neigh.fit(self.xu, self.yu)
-            self.accuracy += neigh.score(self.xt, self.yt)
-        self.accuracy /= attempts
+            accuracy += neigh.score(self.xt, self.yt)
+        accuracy /= attempts
+        return accuracy
 
-    def knn_accuracy_list(self, step, split_ratio=0.5, attempts=20):
+    def knn_accuracy_list(self, step, split_ratio=0.5, attempts=5):
         self.split_data(split_ratio)
-        self.accuracy_list = []
+        accuracy_list = []
         for i in range(1, len(self.xt), step):
-            self.knn_accuracy(i, attempts, split_ratio)
-            self.accuracy_list.append((i, self.accuracy))
+            accuracy_list.append((i, self.knn_accuracy(i, attempts, split_ratio)))
+        return accuracy_list
 
     def plot_data_set(self):
         for i in range(len(self.x)):
@@ -76,7 +75,7 @@ class Knn:
     def plot_knn_accuracy(accuracy_lists, labels, data_sets_num):
         for i in range(data_sets_num):
             plt.plot(np.array(accuracy_lists[i])[:, 0], np.array(accuracy_lists[i])[:, 1], label=labels[i])
-        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1),
                    ncol=3, fancybox=True, shadow=True)
         plt.xlabel("współczynnik k")
         plt.ylabel("dokładność")
